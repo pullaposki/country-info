@@ -40,12 +40,14 @@ export function App() {
         setCountriesToDisplay(filteredCountries);
     }
     
+    const handleShowClick = (name)=>{
+        console.log("should go to ",name);
+    }
     const displayCountries = ()=>{
         if(countriesToDisplay.length>10){
             return <p>Specify your search.</p>
         }
         
-        // Kun ehdon täyttäviä maita on enää yksi, näytetään maan perustiedot, lippu sekä maassa puhutut kielet:
         if(countriesToDisplay.length===1){
             return(
                 <div>
@@ -62,7 +64,11 @@ export function App() {
             )
         }
 
-        return countriesToDisplay.map(country=> <p>{country.name.common}</p>)
+        return countriesToDisplay.map(country=> 
+            <p>
+                {country.name.common}
+                <button onClick={() => {setSearch(country.name.common)} }>show</button>
+            </p>)
     }
     
   return (
