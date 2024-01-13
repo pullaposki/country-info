@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'preact/hooks'
 import getAll from "./services/countriesGetter.js";
 
-
 export function App() {
     const [search, setSearch]=useState("");
     const [countries, setCountries]=useState([]);
@@ -42,8 +41,28 @@ export function App() {
     }
     
     const displayCountries = ()=>{
-            return countriesToDisplay.map(country=> <p>{country.name.common}</p>
-        )
+        if(countriesToDisplay.length>10){
+            return <p>Specify your search.</p>
+        }
+        
+        // Kun ehdon täyttäviä maita on enää yksi, näytetään maan perustiedot, lippu sekä maassa puhutut kielet:
+        if(countriesToDisplay.length===1){
+            return(
+                <div>
+                    {countriesToDisplay.map(country=>
+                        <div>
+                            <h4>Names</h4>
+                            <p>{country.name.common}</p>
+                            <p>{country.name.official}</p>
+                            <h4>Languages</h4>
+                            {Object.values(country.languages).map(language=><p>{language}</p>)}
+                        </div>
+                    )}
+                </div>
+            )
+        }
+
+        return countriesToDisplay.map(country=> <p>{country.name.common}</p>)
     }
     
   return (
