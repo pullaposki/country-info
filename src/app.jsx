@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'preact/hooks'
 import getAll from "./services/countriesGetter.js";
+import getWeatherForCountry from "./services/weatherGetter.js";
 
 export function App() {
     const [search, setSearch]=useState("");
     const [countries, setCountries]=useState([]);
     const [isLoading, setIsLoading]=useState(true);
     const [countriesToDisplay, setCountriesToDisplay]= useState([]);
-    
+    const [countrySelected, setCountrySelected]=useState("");
     const handleChange = (event) =>{
         setSearch(event.target.value);
     }
@@ -35,6 +36,19 @@ export function App() {
         showFilteredCountries();
     }, [search]);
     
+    useEffect((name)=>{
+        console.log("should get weather for...", countrySelected);
+        setIsLoading(true);
+        getWeatherForCountry(countrySelected).then(data => {
+            console.log(data);
+            setIsLoading(false);
+        }).catch(error => {
+            console.log("error getting weather ",error);
+            setIsLoading(false);
+        })
+        
+    },[countrySelected])
+    
     const showFilteredCountries= ()=>{
         let filteredCountries= countries.filter(country => country.name.common.toLowerCase().includes(search.toLowerCase()));
         setCountriesToDisplay(filteredCountries);
@@ -45,10 +59,12 @@ export function App() {
     }
     const displayCountries = ()=>{
         if(countriesToDisplay.length>10){
+            setCountrySelected("");
             return <p>Specify your search.</p>
         }
         
         if(countriesToDisplay.length===1){
+            setCountrySelected(countriesToDisplay[0].name.common);
             return(
                 <div>
                     {countriesToDisplay.map(country=>
@@ -63,7 +79,7 @@ export function App() {
                 </div>
             )
         }
-
+        setCountrySelected("");
         return countriesToDisplay.map(country=> 
             <p>
                 {country.name.common}
