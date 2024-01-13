@@ -51,11 +51,11 @@ export function App() {
                 <div>
                     {countriesToDisplay.map(country=>
                         <div>
-                            <h4>Names</h4>
-                            <p>{country.name.common}</p>
+                            <h2>{country.name.common}</h2>
                             <p>{country.name.official}</p>
                             <h4>Languages</h4>
                             {Object.values(country.languages).map(language=><p>{language}</p>)}
+                            <img src={country.flags.png} alt={country.flag.alt} />
                         </div>
                     )}
                 </div>
